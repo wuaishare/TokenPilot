@@ -2,12 +2,16 @@
 
 ![TokenPilot 项目海报](./docs/assets/tokenpilot-hero.webp)
 
+
+
+## **项目状态：还在探索构思中……**  
+> TokenPilot 目前还处在立项早期，很多想法和具体形态都还在持续打磨。  
+> **如果你对 ChatGPT + Codex 协同开发、Token 优化、任务边界设计这类话题感兴趣，欢迎参与讨论：[GitHub Discussions](https://github.com/wuaishare/TokenPilot/discussions)。**  
+> 欢迎分享经验、反例和有价值的思路。
+
 > **省 Token，不省思考。**  
 > 用 ChatGPT 做需求澄清、上下文压缩、任务规划与结果复盘；用 Codex 进入仓库执行修改、运行验证、产出 Diff / PR。  
 > **让 AI 少读重复上下文，多做有效开发。**
-
-[💬 参与讨论](https://github.com/wuaishare/TokenPilot/discussions) · [🐛 提交问题](https://github.com/wuaishare/TokenPilot/issues)
-
 ---
 
 ## TokenPilot 是什么？
