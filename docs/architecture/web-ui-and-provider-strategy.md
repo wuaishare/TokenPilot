@@ -1,10 +1,14 @@
 # TokenPilot Web UI And Provider Strategy
 
+> Status: Draft / RFC
+>
+> This document describes the proposed Web UI and provider strategy. It is not an implementation status report.
+
 ## Purpose
 
 Define the next product step after the current local-first API scaffold: keep the HTTP API for GPT and automation, while adding a human-facing Web UI that lowers setup cost, exposes current state clearly, and creates a path toward installer-grade packaging.
 
-This document is intentionally product-facing and implementation-aware. It is not a promise that every described capability already exists. It defines the target shape for the next stage.
+This document is intentionally product-facing and implementation-aware. It does not mean the Web UI, provider adapters, or the full GPT Actions production loop already exist. It defines the target shape for the next stage.
 
 ## Current Baseline
 
