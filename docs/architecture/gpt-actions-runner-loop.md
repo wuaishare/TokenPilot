@@ -4,6 +4,25 @@
 
 Phase 2 turns the current local-first scaffold into a real automation loop that can be driven from the ChatGPT web UI without exposing the local development machine directly.
 
+## Current Status
+
+Completed in the current repo state:
+
+- local-first CLI / server / runner scaffold
+- exposed-mode authentication groundwork
+- local E2E verification for auth, queue, runner, and public-path behavior
+- public/private repository boundary governance
+
+Still under validation:
+
+- long-running HTTPS endpoint stability in a real deployment
+- end-to-end Custom GPT Actions job creation and polling
+- artifact/result consumption by a real GPT-side client
+- production-grade multi-runner and public-internet operations
+
+Phase 2 security groundwork is completed.
+Full GPT Actions automation loop is still under validation.
+
 ## Recommended Topology
 
 ```text
