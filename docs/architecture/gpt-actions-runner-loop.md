@@ -11,6 +11,7 @@ Completed in the current repo state:
 - local-first CLI / server / runner scaffold
 - exposed-mode authentication groundwork
 - local E2E verification for auth, queue, runner, and public-path behavior
+- controlled read-only file access for allowlisted repositories
 - public/private repository boundary governance
 
 Still under validation:
