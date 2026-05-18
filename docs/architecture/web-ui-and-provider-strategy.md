@@ -10,6 +10,8 @@ Define the next product step after the current local-first API scaffold: keep th
 
 This document is intentionally product-facing and implementation-aware. It does not mean the Web UI, provider adapters, or the full GPT Actions production loop already exist. It defines the target shape for the next stage.
 
+本文中的 dashboard、setup wizard、`/ui` 路径和 provider mode 描述，默认都应理解为提案中的目标形态，而不是当前仓库已经全部交付的实现状态。
+
 ## Current Baseline
 
 Already completed:
@@ -46,7 +48,7 @@ This keeps the product understandable for users while preserving machine-friendl
 
 ## Why Web UI
 
-The current control plane is functional but too indirect for onboarding. Users still have to understand:
+The current control-plane baseline is useful as a local-first API and runner scaffold, but it is still too indirect for onboarding. Users still have to understand:
 
 - which URL to expose
 - which OpenAPI URL to paste into GPT Actions
@@ -59,7 +61,7 @@ A Web UI reduces this by making TokenPilot itself the setup and observability su
 
 ## Design Goal
 
-The ideal first-run experience is:
+The intended first-run experience for a future Web UI stage is:
 
 1. The user runs one local command to start TokenPilot.
 2. The user opens the Web UI in a browser.
@@ -167,6 +169,8 @@ Recommended top-level sections:
 
 ### 1. Setup Wizard
 
+This is a future-stage proposal, not part of the first read-only MVP.
+
 Responsibilities:
 
 - first-run onboarding
@@ -198,6 +202,8 @@ Responsibilities:
 
 ### 4. Workspaces
 
+This is explicitly out of scope for the first read-only MVP.
+
 Responsibilities:
 
 - manage allowlisted repo roots
@@ -215,6 +221,8 @@ Responsibilities:
 - explain current status boundary
 
 ### 6. Advanced
+
+This is explicitly out of scope for the first read-only MVP.
 
 Responsibilities:
 
@@ -273,6 +281,13 @@ Recommended boundary:
 
 - Web UI for human setup and management
 - API for GPTs, scripts, and automation
+
+For the first MVP specifically:
+
+- human operators use a local-first read-only Web UI
+- GPTs and automations continue to use the API
+- provider adapters are not part of the first MVP
+- full HTTPS / Custom GPT Actions automation loop remains under validation
 
 The API remains the machine contract.
 The UI becomes the human contract.
