@@ -284,7 +284,7 @@ Recommended boundary:
 
 For the first MVP specifically:
 
-- human operators use a local-first read-only Web UI
+- human operators use a local-first operator Web UI with constrained tracked-job controls
 - GPTs and automations continue to use the API
 - provider adapters are not part of the first MVP
 - full HTTPS / Custom GPT Actions automation loop remains under validation

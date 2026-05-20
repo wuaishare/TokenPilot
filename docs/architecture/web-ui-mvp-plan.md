@@ -2,15 +2,15 @@
 
 > Status: Implemented for MVP
 >
-> This document records the delivered local-first read-only Web UI MVP scope. It is not a claim that full HTTPS / Custom GPT Actions production automation is complete.
+> This document records the delivered local-first operator Web UI MVP scope. It is not a claim that full HTTPS / Custom GPT Actions production automation is complete.
 >
 > 状态：MVP 已实现
 >
-> 本文档记录已经交付的本地优先、只读型 Web UI MVP 范围，不代表完整 HTTPS / Custom GPT Actions 生产闭环已经完成。
+> 本文档记录已经交付的本地优先操作员 Web UI MVP 范围，不代表完整 HTTPS / Custom GPT Actions 生产闭环已经完成。
 
 ## Goal
 
-Deliver a local-first read-only Web UI for human operators to inspect TokenPilot state in a browser without exposing private runtime internals or turning the UI into a write-capable management plane.
+Deliver a local-first Web UI for human operators to inspect TokenPilot state and control tracked job processes in a browser without exposing private runtime internals or turning the UI into a raw shell or public management plane.
 
 Core product boundary:
 
@@ -27,7 +27,7 @@ This MVP does not include:
 - provider adapters
 - tunnel creation
 - installer flows
-- job creation, retry, cancel, delete, or shell execution
+- job creation, retry, delete, or shell execution
 - arbitrary file reads
 - direct reads from `.tokenpilot/`, `.servbay/`, or `.codex/`
 - turning the Web UI into a public internet management console
@@ -54,6 +54,8 @@ Must show:
 
 - jobs list
 - selected job detail
+- selected tracked job pause / resume / terminate controls
+- terminate-all tracked job process control
 - status
 - type
 - createdAt / updatedAt
@@ -78,6 +80,8 @@ The MVP should consume only existing HTTP API endpoints and public-safe server r
 - `GET /api/health`
 - `GET /api/jobs`
 - `GET /api/jobs/:id`
+- `POST /api/jobs/:id/control/:action`
+- `POST /api/jobs/control/terminate-all`
 - `GET /openapi.yaml`
 
 The Web UI must not read `.tokenpilot/` files directly.
@@ -89,6 +93,7 @@ The Web UI must not read `.tokenpilot/` files directly.
 - The UI does not read or write `.tokenpilot` internal files.
 - The UI does not provide raw shell or arbitrary command execution.
 - The UI does not provide configuration writes.
+- The UI can only send constrained process-control actions to tracked jobs.
 - The UI does not show full bearer tokens.
 - The UI does not show local absolute filesystem paths.
 - The UI does not expose `.env`, `server.env`, `.tokenpilot/runtime`, `.codex`, or `.servbay` contents.
@@ -125,12 +130,12 @@ The MVP is acceptable when:
 
 What this MVP means:
 
-- TokenPilot Web UI MVP: local-first read-only console implemented.
+- TokenPilot Web UI MVP: local-first operator console implemented.
 - `/ui` and `/ui/` are reachable from the local Fastify server.
 - Dashboard, Jobs, and GPT Helper are delivered.
 - loading / empty / error / auth-required states are delivered.
 - browser-session token handling is delivered.
-- the read-only boundary is enforced at the product level.
+- the raw-shell and private-file boundaries are enforced at the product level.
 
 What this MVP does not mean:
 
@@ -138,5 +143,5 @@ What this MVP does not mean:
 - provider / tunnel adapters are implemented
 - setup wizard is implemented
 - workspace editing is implemented
-- a write-capable management plane exists
+- a raw-shell or arbitrary write management plane exists
 - TokenPilot has become a public production management platform

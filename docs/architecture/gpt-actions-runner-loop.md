@@ -12,12 +12,14 @@ Completed in the current repo state:
 - exposed-mode authentication groundwork
 - local E2E verification for auth, queue, runner, and public-path behavior
 - controlled read-only file access for allowlisted repositories
+- `createCodexRun` write-side job for local Codex CLI execution
+- optional git worktree execution and Codex review artifacts
 - public/private repository boundary governance
 
 Still under validation:
 
 - long-running HTTPS endpoint stability in a real deployment
-- end-to-end Custom GPT Actions job creation and polling
+- end-to-end Custom GPT Actions job creation and polling against a live GPT-side client
 - artifact/result consumption by a real GPT-side client
 - production-grade multi-runner and public-internet operations
 
@@ -35,7 +37,7 @@ Job Queue / Job State
   ↓
 Local Runner
   ↓
-repomix / task pack / Codex-side execution
+repomix / task pack / Codex CLI execution
 ```
 
 ## Why This Topology
@@ -62,6 +64,8 @@ Suggested endpoints:
 - `POST /api/jobs/pack`
 - `POST /api/jobs/taskpack`
 - `POST /api/jobs/codex-run`
+- `POST /api/jobs/:id/control/:action`
+- `POST /api/jobs/control/terminate-all`
 - `GET /api/jobs/:id`
 - `GET /api/jobs/:id/artifacts`
 
@@ -70,7 +74,8 @@ Suggested endpoints:
 Responsibilities:
 
 - poll the control plane for assigned jobs
-- execute local commands inside trusted repositories
+- execute local Codex CLI jobs inside trusted repositories
+- optionally create per-job git worktrees
 - upload artifacts and final status
 - never expose a raw shell endpoint publicly
 
@@ -83,7 +88,7 @@ Artifacts to standardize:
 - `bundle-summary.md`
 - `task-pack.md`
 - `task-pack.json`
-- optional Codex execution summary
+- Codex execution prompt, JSONL/stdout, stderr, diff, review, and summary
 
 ## ServBay + frp Deployment Path
 
