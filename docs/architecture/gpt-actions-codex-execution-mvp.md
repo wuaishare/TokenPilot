@@ -1,27 +1,66 @@
-# GPT Actions to Codex Execution MVP
+# GPT Actions Dual-Mode Architecture
 
-This route prioritizes the shortest useful ChatGPT + local Codex workflow while keeping a small set of hard safety gates.
+TokenPilot now supports two execution modes: ChatGPT direct-drive for simple edits, and Codex async jobs for complex tasks.
 
-## First Principle
+## Dual-Mode Overview
 
-TokenPilot should not become a large security platform before the core workflow works. The MVP is:
+```text
+                    ChatGPT / GPT Actions
+                    /                    \
+           Direct-Drive                  Codex Async
+           (简单修改)                     (复杂任务)
+           /        \                   /          \
+   writeFile/editFile  runShell   createCodexRun   job artifacts
+   searchCode           git ops   codex exec       codex review
+   listDirectory        git cmt   worktree         diff/commit
+           \        /                   \          /
+            TokenPilot API  ←──→  TokenPilot Runner
+                    \                    /
+                 local allowlisted repo
+```
+
+## Mode Selection
+
+| 场景 | 模式 | 延迟 | 隔离 |
+|---|---|---|---|
+| 改一行文案、修 typo | 直驱 editFile | 实时 1-3s | 无 |
+| 单文件小改动 + verify | 直驱 editFile + runShell | 5-15s | 无 |
+| 多文件编辑 + 验证 | 直驱（可自己编排） | 15-60s | 无 |
+| 跨文件重构、深度探索 | Codex createCodexRun | 分钟级 | 可选 worktree |
+| 需要自动审查 | Codex createCodexRun | 分钟级 | 可选 worktree |
+
+## ChatGPT Direct-Drive Mode
+
+ChatGPT calls TokenPilot APIs directly without going through Codex CLI:
+
+- `writeFile` — create/overwrite text files (512 KB max)
+- `editFile` — precise search-and-replace (search must be unique)
+- `listDirectory` — list directory contents
+- `searchCode` — ripgrep code search (40 results max)
+- `runShell` — whitelisted command execution (25s timeout, 64 KB output cap)
+- `getGitDiff` / `getGitStatus` — view changes
+- `gitCommit` — stage and commit
+
+Safety: all paths validated through repo allowlist + blocked segments. `runShell` uses command whitelist, not raw shell.
+
+## Codex Async Mode (createCodexRun)
 
 ```text
 ChatGPT / GPT Actions
-  -> TokenPilot job API
+  -> TokenPilot job API (createCodexRun)
   -> local allowlisted repo
   -> optional git worktree
-  -> codex exec
+  -> codex exec (Codex uses its own model_provider)
   -> codex review
   -> diff / review / commit artifacts
-  -> ChatGPT result review
+  -> ChatGPT result review via getJob + artifacts
 ```
 
 ## Read / Write Split
 
-- Read-side APIs stay narrow: health, GPT config, recent commits, allowlisted file reads, job status, job artifacts.
-- Write-side APIs do not expose raw shell. They create explicit jobs that the local runner consumes.
-- Codex CLI owns code changes, verification, and review inside the selected local repo.
+- Read-side APIs: health, GPT config, recent commits, file reads, directory listing, code search, job status, job artifacts.
+- Write-side APIs — direct-drive: `writeFile`, `editFile`, `runShell` (whitelisted), `gitCommit`.
+- Write-side APIs — async: `createCodexRun` (delegates to Codex CLI).
 - TokenPilot owns queueing, process control, artifact capture, and public-safe status.
 
 ## MVP Repo Governance
