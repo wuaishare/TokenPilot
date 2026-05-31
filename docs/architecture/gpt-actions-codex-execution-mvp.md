@@ -41,7 +41,7 @@ ChatGPT calls TokenPilot APIs directly without going through Codex CLI:
 - `getGitDiff` / `getGitStatus` — view changes
 - `gitCommit` — stage and commit
 
-Safety: all paths validated through repo allowlist + blocked segments. `runShell` uses command whitelist, not raw shell.
+Safety: all paths validate through repo allowlist + blocked segments. `runShell` uses a command whitelist, not raw shell, but it is still a high-trust local command execution API and should only be exposed behind bearer auth in an operator-controlled environment.
 
 ## Codex Async Mode (createCodexRun)
 
@@ -59,7 +59,7 @@ ChatGPT / GPT Actions
 ## Read / Write Split
 
 - Read-side APIs: health, GPT config, recent commits, file reads, directory listing, code search, job status, job artifacts.
-- Write-side APIs — direct-drive: `writeFile`, `editFile`, `runShell` (whitelisted), `gitCommit`.
+- Write-side APIs — direct-drive: `writeFile`, `editFile`, `runShell` (whitelisted, 25s cap), `gitCommit` (public-safe paths only).
 - Write-side APIs — async: `createCodexRun` (delegates to Codex CLI).
 - TokenPilot owns queueing, process control, artifact capture, and public-safe status.
 
@@ -103,7 +103,7 @@ The runner captures:
 - execution prompt
 - Codex JSONL/stdout/stderr
 - git status
-- diff patch
+- public-safe diff patch
 - Codex review output
 - execution summary
 - optional commit result
@@ -116,7 +116,8 @@ Keep this list short and enforceable:
 2. `repoId` must resolve through the local allowlist.
 3. No raw shell HTTP endpoint.
 4. Non-read jobs run through the local runner, not synchronously in the public request.
-5. Worktree and commit behavior are explicit job fields and are recorded in artifacts.
+5. Git diff / commit / Codex artifacts must omit public-unsafe paths such as env files, TokenPilot runtime state, logs, and local agent state.
+6. Worktree and commit behavior are explicit job fields and are recorded in artifacts.
 
 ## Task Control
 

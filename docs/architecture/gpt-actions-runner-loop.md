@@ -15,6 +15,7 @@ Completed in the current repo state:
 - `createCodexRun` write-side job for local Codex CLI execution
 - optional git worktree execution and Codex review artifacts
 - public/private repository boundary governance
+- ChatGPT direct-drive APIs for small edits, short verification commands, and public-safe Git inspection/commit
 
 Still under validation:
 
@@ -90,32 +91,18 @@ Artifacts to standardize:
 - `task-pack.json`
 - Codex execution prompt, JSONL/stdout, stderr, diff, review, and summary
 
-## ServBay + frp Deployment Path
+## Private HTTPS Deployment Boundary
 
-Given the current environment, the likely deployment path is:
+The public architecture is intentionally reverse-proxy agnostic:
 
 ```text
 Custom GPT Actions
   ↓
 https://tokenpilot.example.com
   ↓
-ServBay local site / reverse proxy
+private HTTPS reverse proxy or tunnel
   ↓
 TokenPilot local control-plane server
-```
-
-With frp:
-
-```text
-Public DNS
-  ↓
-frps
-  ↓
-ServBay built-in frp client
-  ↓
-local HTTPS reverse proxy
-  ↓
-TokenPilot server
 ```
 
 ## Public Endpoint Pattern
@@ -128,6 +115,8 @@ Public repo documentation should use a placeholder deployment domain. The real d
 
 - require a shared secret or signed bearer token between GPT Actions and the control plane
 - do not expose arbitrary shell execution
+- treat `runShell` as a high-trust local operator API even though it is whitelisted and not raw shell
+- omit public-unsafe paths from diff, commit, and artifact surfaces
 - only allow jobs against approved local repositories
 - require explicit repository allowlists
 - log every job request and artifact result
@@ -147,6 +136,7 @@ The first stable version should use an asynchronous job loop:
 ## What Not To Do
 
 - do not let a Custom GPT invoke the local machine shell directly over the internet
+- do not expose direct-drive write APIs without bearer auth and an operator-controlled network boundary
 - do not rely on synchronous long-running HTTPS calls for repository packaging or Codex execution
 - do not bind the local development machine directly to a public shell or MCP endpoint without a control plane
 
@@ -155,7 +145,6 @@ The first stable version should use an asynchronous job loop:
 - [ ] local server has stable OpenAPI schema
 - [ ] job persistence exists
 - [ ] local runner can poll and execute jobs
-- [ ] HTTPS route is reachable through ServBay
-- [ ] frp tunnel is stable
+- [ ] HTTPS route is reachable through a private reverse proxy or tunnel
 - [ ] authentication is enforced
 - [ ] artifact download and status polling work end-to-end

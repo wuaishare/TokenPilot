@@ -137,7 +137,7 @@ Instead it should define a provider adapter layer and expose simple user-facing 
 - Support multiple providers internally.
 - Expose user-facing modes in the UI instead of forcing the user to choose a provider first.
 - Hide advanced provider-specific knobs until needed.
-- Keep `frp` available as an advanced operator path, not the default.
+- Keep non-default tunnel providers available as advanced operator paths.
 - Treat ServBay as an optional local runtime / reverse-proxy companion, not as a hard dependency.
 
 ## Why Cloudflare Tunnel As The Stable Default
@@ -342,7 +342,7 @@ For example:
 - `临时公网预览`
 - `稳定 GPT Actions 地址`
 
-Only in advanced screens should users see raw provider terminology such as `Cloudflare Tunnel`, `frp`, or `ngrok`.
+Only in advanced screens should users see raw provider terminology such as `Cloudflare Tunnel`, `ngrok`, or other tunnel providers.
 
 ## Installer And Packaging Direction
 
